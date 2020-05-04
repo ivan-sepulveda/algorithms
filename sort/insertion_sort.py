@@ -35,3 +35,4 @@ def insertion_sort(array, recursive=False, n=sys.maxsize):
             sorted_array = insertion_helper(sorted_array, some_previous_index, current_value)
 
         return sorted_array
+
