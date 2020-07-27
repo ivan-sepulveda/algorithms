@@ -1,9 +1,11 @@
+import sys
+
 """
 =========================================================================================================
 dijkstra's_algorithm.py
 =========================================================================================================
 
-Goal:
+Goal: This is a comment
     I am implementing Dijkstra's Algorithm in Python, following along with tutorial by Amitabha Dey
 
 Sources:
@@ -13,6 +15,7 @@ Sources:
 
 Disclaimer(s):
     I do not claim any credit for this code. It was following along with [2] and the end result pretty much [1].
+    However, I have spent significant time and effort refactoring and optimizing.
     I do however, claim credit for the ascii art, as I'm quite proud of it.
 
 directed_graph_a: Besides nodes G & H, all other nodes have one-way edges.
@@ -63,21 +66,21 @@ undirected_graph_a = {
 }
 
 
-def dijkstras_algorithm(graph, start_node, end_node, infinity=10**6):
-    path, node_predecessor, unseen_nodes = [], {}, graph  # Set up
-    shortest_distance = {node: (infinity if node != start_node else 0) for node in unseen_nodes}
+def dijkstras_algorithm(graph, start_node, end_node, infinity=sys.maxsize):
+    path, node_predecessor = [], {}  # Final Path, {Node_N: 2nd-to-last Node in shortest path to N}
+    unseen_nodes = graph.copy()  # Make a copy so we don't alter the input graph. (In case user needs it later).
+    shortest_distance = {node: (infinity if node != start_node else 0)  # Least cost to a given node from start_node
+                         for node in unseen_nodes}  # This will be updated as we iterate and find better paths.
 
     while unseen_nodes:  # Step 1: 'See' all nodes and register them appropriately to data structures above
         min_distance_node = None  # By Default, Least-Path-Connection-Nodes are set to None
         for node in unseen_nodes:  # Step 1a: Iterate through all unseen nodes to find lowest cost
-
             if min_distance_node is None or shortest_distance[node] < shortest_distance[min_distance_node]:
                 min_distance_node = node  # min_distance_node = node by default or if new node has lower cost
 
         path_options = graph[min_distance_node].items()  # Get child nodes of current lowest cost node
 
-        for child_node, weight in path_options:  # Iterate through path_options to see if reduced-cost paths present
-
+        for child_node, weight in path_options:  # Iterate through path_options to see if reduced-cost paths present.
             if weight + shortest_distance[min_distance_node] < shortest_distance[child_node]:
                 shortest_distance[child_node] = weight + shortest_distance[min_distance_node]
                 node_predecessor[child_node] = min_distance_node  # Updates least_cost & associated parent node
@@ -104,6 +107,3 @@ def dijkstras_algorithm(graph, start_node, end_node, infinity=10**6):
 shortest_path, least_cost = dijkstras_algorithm(undirected_graph_a, 'A', 'H')
 print('Shortest distance from {0} to {1} is {2}, and is obtained by taking the optimized path below:\n\t{3}'
       .format(shortest_path[0], shortest_path[-1], least_cost, shortest_path))
-
-
-
